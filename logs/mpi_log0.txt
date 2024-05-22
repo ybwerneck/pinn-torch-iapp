@@ -1,0 +1,15 @@
+Total GPUs available: 2 
+Process 0 is using GPU 0 
+GPU 0: NVIDIA A100 80GB PCIeGPU 1: NVIDIA A100 80GB PCIe
+ RANK0, runnin simu 0 params:
+ {'hidden_layers': ((<class 'torch.nn.modules.activation.ELU'>, 32), (<class 'torch.nn.modules.activation.ELU'>, 32))} 
+ in dir ./batch_results/simulation0
+ RANK0, runnin simu 4 params:
+ {'hidden_layers': ((<class 'torch.nn.modules.activation.ELU'>, 32), (<class 'torch.nn.modules.activation.SiLU'>, 64))} 
+ in dir ./batch_results/simulation4
+ RANK0, runnin simu 8 params:
+ {'hidden_layers': ((<class 'torch.nn.modules.activation.SiLU'>, 64), (<class 'torch.nn.modules.activation.ELU'>, 32))} 
+ in dir ./batch_results/simulation8
+ RANK0, runnin simu 12 params:
+ {'hidden_layers': ((<class 'torch.nn.modules.activation.SiLU'>, 64), (<class 'torch.nn.modules.activation.SiLU'>, 64))} 
+ in dir ./batch_results/simulation12

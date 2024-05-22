@@ -1,0 +1,71 @@
+
+#!/bin/bash
+# Job name
+#PBS -N inferencia
+
+# Name of stdout output file
+#PBS -o logs/saidas.out
+#PBS -e logs/saidas.err
+# Run time (hh:mm:ss) - 1.5 hours
+#PBS -l walltime=20:00:00
+
+#PBS -l nodes=compute-1-0:ppn=1
+
+# Change to submission directory
+cd $PBS_O_WORKDIR
+
+cat $PBS_NODEFILE
+rm logs/log_speed_comp.*
+rm logs/saidas*
+
+# Export CUDA path
+export LD_LIBRARY_PATH=/home/yan/MonoBatch/monoalg_deploy_server:/usr/local/cuda-12.3/targets/x86_64-linux/lib/:$LD_LIBRARY_PATH
+#export CUDA_VISIBLE_DEVICES=  0
+echo $CUDA_VISIBLE_DEVICES
+
+
+# Update PATH to include Anaconda3 bin directory
+export PATH=/share/apps/anaconda3/bin:$PATH
+# Get the number of GPUs
+gpu_count=$(nvidia-smi -L | wc -l)
+
+# Loop through each GPU
+for (( i=0; i<gpu_count; i++ ))
+do
+    # Print GPU information
+    gpu_info=$(nvidia-smi -L | sed -n "$((i+1))p")
+    echo "$gpu_info"
+    
+    # Check for MIG instances
+    mig_count=$(nvidia-smi -i $i --query-gpu=mig.mode.current --format=csv,noheader | grep -c Enabled)
+    
+    if [ "$mig_count" -gt 0 ]; then
+        # List all MIG instances for this GPU
+        nvidia-smi -i $i --query-compute-apps=uuid --format=csv,noheader,nounits | while IFS= read -r mig_uuid
+        do
+            echo "  MIG: $mig_uuid"
+        done
+    else
+        echo "  No MIG instances found."
+    fi
+done
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/share/apps/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/share/apps/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/share/apps/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/share/apps/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+nvidia-smi
+# Activate the Conda environment
+conda activate myenv
+
+# Launch MPI-based executable
+time   python speed_com.py

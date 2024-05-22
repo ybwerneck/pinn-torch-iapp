@@ -1,0 +1,141 @@
+compute-1-0.localdomain
+
+GPU 0: NVIDIA A100 80GB PCIe (UUID: GPU-8c36d9dd-4315-583f-c95d-c0e7575f3433)
+  No MIG instances found.
+GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-3abe7f07-d793-14fa-a218-bf805e641e63)
+  No MIG instances found.
+Wed May 22 04:33:28 2024       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 545.23.08              Driver Version: 545.23.08    CUDA Version: 12.3     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA A100 80GB PCIe          On  | 00000000:21:00.0 Off |                    0 |
+| N/A   40C    P0              82W / 300W |   1473MiB / 81920MiB |    100%      Default |
+|                                         |                      |             Disabled |
++-----------------------------------------+----------------------+----------------------+
+|   1  NVIDIA A100 80GB PCIe          On  | 00000000:81:00.0 Off |                    0 |
+| N/A   38C    P0              76W / 300W |   1473MiB / 81920MiB |     99%      Default |
+|                                         |                      |             Disabled |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|    0   N/A  N/A    892697      C   python                                      728MiB |
+|    0   N/A  N/A    892699      C   python                                      726MiB |
+|    1   N/A  N/A    892698      C   python                                      726MiB |
+|    1   N/A  N/A    892700      C   python                                      728MiB |
++---------------------------------------------------------------------------------------+
+[05/22/2024-04:33:55] [TRT] [W] Using default stream in enqueueV3() may lead to performance issues due to additional calls to cudaStreamSynchronize() by TensorRT to ensure correct synchronization. Please use non-default stream instead.
+Allocated GPU Memory: 0.00 GB
+Cached GPU Memory: 0.00 GB
+kernel call: ./a.out 50 0.01 200
+
+ DT 200 t 0.010000 rate 50.000000 
+400000 CELLS   26 timepoints 
+Memorya usage:
+Free memory: 76.32 GB
+Total memory: 79.15 GB
+391 block of 1024 threads 
+Memorya usage:
+Free memory: 76.24 GB
+Total memory: 79.15 GB
+Run time in seconds: 0.035794
+
+243
+Number of rows in the CSV file:  100 26
+kernel call: ./a.out 50 0.01 200
+
+ DT 200 t 0.010000 rate 50.000000 
+800000 CELLS   26 timepoints 
+Memorya usage:
+Free memory: 76.32 GB
+Total memory: 79.15 GB
+782 block of 1024 threads 
+Memorya usage:
+Free memory: 76.15 GB
+Total memory: 79.15 GB
+Run time in seconds: 0.075119
+
+243
+Number of rows in the CSV file:  100 26
+kernel call: ./a.out 50 0.01 200
+
+ DT 200 t 0.010000 rate 50.000000 
+1600000 CELLS   26 timepoints 
+Memorya usage:
+Free memory: 76.32 GB
+Total memory: 79.15 GB
+1563 block of 1024 threads 
+Memorya usage:
+Free memory: 75.99 GB
+Total memory: 79.15 GB
+Run time in seconds: 0.150072
+
+245
+Number of rows in the CSV file:  100 26
+kernel call: ./a.out 50 0.01 200
+
+ DT 200 t 0.010000 rate 50.000000 
+3200000 CELLS   26 timepoints 
+Memorya usage:
+Free memory: 76.32 GB
+Total memory: 79.15 GB
+3125 block of 1024 threads 
+Memorya usage:
+Free memory: 75.66 GB
+Total memory: 79.15 GB
+Run time in seconds: 0.242486
+
+245
+Number of rows in the CSV file:  100 26
+kernel call: ./a.out 50 0.01 200
+
+ DT 200 t 0.010000 rate 50.000000 
+6400000 CELLS   26 timepoints 
+Memorya usage:
+Free memory: 76.32 GB
+Total memory: 79.15 GB
+6250 block of 1024 threads 
+Memorya usage:
+Free memory: 75.00 GB
+Total memory: 79.15 GB
+Run time in seconds: 0.581323
+
+245
+Number of rows in the CSV file:  100 26
+kernel call: ./a.out 50 0.01 200
+
+ DT 200 t 0.010000 rate 50.000000 
+12800000 CELLS   26 timepoints 
+Memorya usage:
+Free memory: 76.32 GB
+Total memory: 79.15 GB
+12500 block of 1024 threads 
+Memorya usage:
+Free memory: 73.69 GB
+Total memory: 79.15 GB
+Run time in seconds: 1.226476
+
+247
+Number of rows in the CSV file:  100 26
+kernel call: ./a.out 50 0.01 200
+
+ DT 200 t 0.010000 rate 50.000000 
+25600000 CELLS   26 timepoints 
+Memorya usage:
+Free memory: 76.32 GB
+Total memory: 79.15 GB
+25000 block of 1024 threads 
+Memorya usage:
+Free memory: 71.07 GB
+Total memory: 79.15 GB
+Run time in seconds: 2.490786
+
+247
+Number of rows in the CSV file:  100 26

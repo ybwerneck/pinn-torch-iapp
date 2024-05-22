@@ -1,0 +1,60 @@
+beggining speed comp[400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000]Set of size 400000 
+
+Cuda -
+time : 0.019198336 s
+
+pytorch -
+time pytorch 0.8628175258636475
+tensort py -
+time tensorrt 0.10323381423950195
+Set of size 800000 
+
+Cuda -
+time : 0.035445663 s
+
+pytorch -
+time pytorch 1.7197535037994385
+tensort py -
+time tensorrt 0.14777159690856934
+Set of size 1600000 
+
+Cuda -
+time : 0.068991554 s
+
+pytorch -
+time pytorch 3.3834831714630127
+tensort py -
+time tensorrt 0.23676514625549316
+Set of size 3200000 
+
+Cuda -
+time : 0.136183044 s
+
+pytorch -
+time pytorch 6.475425481796265
+tensort py -
+time tensorrt 0.4146871566772461
+Set of size 6400000 
+
+Cuda -
+time : 0.27107815599999996 s
+
+pytorch -
+time pytorch 12.892567873001099
+tensort py -
+time tensorrt 0.7717092037200928
+Set of size 12800000 
+
+Cuda -
+time : 0.540342834 s
+
+pytorch -
+time pytorch 25.73700213432312
+tensort py -
+time tensorrt 1.52736234664917
+Set of size 25600000 
+
+Cuda -
+time : 1.078960571 s
+
+pytorch -
