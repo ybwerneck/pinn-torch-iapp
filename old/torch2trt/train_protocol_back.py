@@ -1,0 +1,116 @@
+from PinnTorch.dependencies import *
+from PinnTorch.Net import *
+from PinnTorch.Trainer import *
+from PinnTorch.Validator import *
+from PinnTorch.Loss import *
+from PinnTorch.Loss_PINN import *
+
+import subprocess
+from PinnTorch.Utils import *
+def ensure_at_least_one_column(x):
+    # If x is 1-dimensional, reshape to (len(x), 1)
+    if x.ndim == 1:
+        return x.reshape(-1, 1)
+    # If x is already 2-dimensional, return it unchanged
+    elif x.ndim == 2:
+        return x
+    else:
+        raise ValueError("Input array must be 1D or 2D")
+    
+
+def denormalize(value, min_val, max_val):
+    return value * (max_val - min_val) + min_val
+# Check if GPU is availabls
+def train(model_params,outputfolder,gpuid):
+        device = torch.device(f"cuda:{gpuid}")##torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        print(device)
+
+        tf=20
+        ##Model Parameters
+        k_range = (0,1)
+        v_range = (0,1)
+        u_range = (0,1)
+        t_range=(0,tf)
+
+
+        ##Model Arch
+        input_shape = 1  
+        output_shape = 1  
+        hidden_layer = model_params["hidden_layers"]
+        dtype=torch.float32
+        model = FullyConnectedNetworkMod(input_shape, output_shape, hidden_layer,dtype=dtype).to(device)
+        trainer=Trainer(model,output_folder=outputfolder,print_steps=100,val_steps=10000)
+
+        print(model)
+
+
+
+        def ode(t, x):
+                dxdt = [ 0.1*x[0],
+                
+                ]
+                return dxdt
+
+   
+
+        def FHN_LOSS(data_in, model):
+               
+            ts = torch.linspace(0, tf, steps=10024,device=device).view(-1,1).requires_grad_(True)
+            # run the collocation points through the network
+            x = model(ts)
+            # get the gradient
+            dT = grad(x, ts)[0]  
+            # compute the ODE
+            ode1 = dT - (0.1*x.T[0])
+
+            ode=ode1
+            # MSE of ODE
+
+            return torch.mean(ode**2)
+
+
+
+
+
+
+        batch_gen=lambda xs,device:ensure_at_least_one_column(default_batch_generator(xs,[[0,tf]],device))
+
+        trainer.add_loss(LOSS_PINN(FHN_LOSS,batch_gen,batch_size=32),weigth=1)
+ 
+        IC=.1ss
+
+        ##BoundaryLossss
+
+        def f(data_in, model):
+                x = model(data_in)
+                #print(data_in)
+                t=data_in.T  
+          
+                u0=[ IC,IC]
+
+                ic1=(x-u0[0])**2
+                ic2=(x.T[0]-u0[0])**2
+                t0 = ic1  + ic2
+
+                
+                return torch.mean(ic1)
+        
+
+        
+        batch_gen=lambda size,de:ensure_at_least_one_column(torch.zeros(size,requires_grad=True).to(de).T)
+        trainer.add_loss(LOSS_PINN(f,batch_gen,batch_size=1024,device=device),weigth=1)
+
+
+        ##Validator
+        trainer.add_validator(FHN_VAL_fromODE(ode,[0,tf],[IC for i in range(output_shape)],1000,device=device,name="val",dtype=dtype))
+        #trainer.add_loss(FHN_LOSS_fromODE(ode,[0,tf],[IC],1000,device=device,name="val",dtype=dtype))
+
+        trainer.train(20000)
+
+
+        subprocess.Popen(f"python Results_plotter.py {outputfolder}", shell=True, stdout=subprocess.PIPE).stdout.read()
+
+
+
+        print(model)
+
