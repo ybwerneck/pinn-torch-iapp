@@ -18,8 +18,15 @@ import torch.utils.model_zoo as model_zoo
 import torch.onnx
 import tensorrt as trt
 import time as TIME
-from data_generator.FHNCUDAlib import FHNCUDA
+import os
+import sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(current_dir, '../data_generator'))
+from FHNCUDAlib import FHNCUDA
 import itertools
+import pandas as pd
+sys.path.append(os.path.join(current_dir, '../'))
+
 from torch2trt import torch2trt
 import torch
 
@@ -46,16 +53,15 @@ device = torch.device('cuda')
 net=pt.load(dir+'/model').to(device)
 
 batch_size=10000
-batch_size_n=10000*26
 
 # create example data
-x = torch.ones((batch_size_n,4)).cuda()
+x = torch.ones((batch_size,3)).cuda()
 
 # convert to TensorRT feeding sample data as input
 model_trt = torch2trt(net, [x])
 ##PRED NETWORK RT
 
-def runModel(x, M=net, batch_size=10):
+def runModel(x, M=net, batch_size=10,its=10):
 
     my2dspace = x
     M.eval()
@@ -71,40 +77,40 @@ def runModel(x, M=net, batch_size=10):
     gc.collect()
     torch.cuda.empty_cache()
     #print(f"batchs {num_samples//batch_size}")
+    for k in range (its):
+        for i in range(0, num_samples, batch_size):
 
-    for i in range(0, num_samples, batch_size):
+            
+            
+            
+            #print_gpu_memory()
 
-        
-        
-        
-        #print_gpu_memory()
+            batch_input =torch.tensor(my2dspace[i:i+batch_size], requires_grad=False).float().cuda() 
+            
+            
+        # print_gpu_memory()
 
-        batch_input =torch.tensor(my2dspace[i:i+batch_size], requires_grad=False).float().cuda() 
-        
-        
-       # print_gpu_memory()
+            
+            
+            start_time = TIME.time()
+            #print(np.shape(batch_input))
 
-        
-        
-        start_time = TIME.time()
-        #print(np.shape(batch_input))
+            batch_output = M(batch_input)
+            
+            
+    
 
-        batch_output = M(batch_input)
-        
-        
- 
-
-        torch.cuda.synchronize()  # Wait for the events to be recorded!
-        
-        
-        
-        
-        reftime =reftime+ TIME.time() - start_time
-        
-        
-        uu_list.append(batch_output.cpu().numpy())
-        #del batch_input
-        #del batch_output
+            torch.cuda.synchronize()  # Wait for the events to be recorded!
+            
+            
+            
+            
+            reftime =reftime+ TIME.time() - start_time
+            
+            
+            uu_list.append(batch_output.cpu().numpy())
+            #del batch_input
+            #del batch_output
         #print_gpu_memory()
        
  
@@ -161,7 +167,7 @@ def runCuda(sample_set, batch_size=10240,dt=0.01,rate=100,tt=50):
  
 
 
-    return pt, x0, u_num, u_num
+    return pt, K, u_num, u_num
 
 
 runtime = trt.Runtime(trt.Logger(trt.Logger.WARNING)) 
@@ -173,7 +179,7 @@ log_file="logs/log_speed_comp.txt"
 
 
 
-ts=[int(100000*(2**(x))) for x in range(2,4)]
+ts=[int(batch_size*(2**(x))) for x in range(2,4)]
 
 # Use the appropriate GPU device
 device = torch.device('cuda')
@@ -209,16 +215,16 @@ if True:
                     #print(f"{cuda_time_a}")
                     cuda_time=cuda_time+cuda_time_a[1]/nrp
             print(f"time : {cuda_time} s\n")
-            
+            its=x0
             
             print("pytorch -")
             net_time=0
             for i in range(10):
-                pr,net_time_a=runModel(x0,batch_size=batch_size_n)
+                pr,net_time_a=runModel(sampleset,batch_size=batch_size,its=its)
                 net_time=net_time+net_time_a/nrp
             
             for i in range(nrp):
-                pr,net_time_a=runModel(x0,batch_size=batch_size_n)
+                pr,net_time_a=runModel(sampleset,batch_size=batch_size,its=its)
                 net_time=net_time+net_time_a/nrp
             
             print(f"time pytorch {net_time}")
@@ -227,14 +233,14 @@ if True:
             print("tensort py -")
             net_time=0
             for i in range(10):
-                pr,net_time_a=runModel(x0,M=model_trt,batch_size=batch_size_n)
+                pr,net_time_a=runModel(sampleset,M=model_trt,batch_size=batch_size,its=its)
             for i in range(nrp):
-                pr,net_time_a=runModel(x0,M=model_trt,batch_size=batch_size_n)
+                pr,net_time_a=runModel(sampleset,M=model_trt,batch_size=batch_size,its=its)
                 net_time_tt=net_time+net_time_a/nrp
             
             print(f"time tensorrt {net_time}")
 
-            data.append([cuda_time,net_time,net_time_tt])
+            data.append([T,cuda_time,net_time,net_time_tt])
    
             tcs.append(cuda_time)    
    
@@ -245,7 +251,6 @@ if True:
 plt.plot(ts,tcs,label="Tempo Cuda")
 plt.plot(ts,tns, label="Tempo tensorrt python")
 plt.legend(loc="best")
-plt.show()
 plt.savefig(base_dir+"/results.png")
 
 # Create a DataFrame and save to CSV

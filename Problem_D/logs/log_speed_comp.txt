@@ -1,0 +1,18 @@
+beggining speed comp[40000, 80000]Set of size 40000 
+
+Cuda -
+time : 0.015073408 s
+
+pytorch -
+time pytorch 0.108856201171875
+tensort py -
+time tensorrt 0
+Set of size 80000 
+
+Cuda -
+time : 0.03416848 s
+
+pytorch -
+time pytorch 0.21309256553649902
+tensort py -
+time tensorrt 0

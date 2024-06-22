@@ -42,8 +42,8 @@ def plot_results(file_path):
     with h5py.File(file_path + "/val_err.h5", 'r') as hf:
         err = hf['error_stats'][:]
 
-    window_size = 2000
-    absolute_error = np.abs(target - pred)
+    window_size = 1000
+    absolute_error = np.abs(target_ts - pred_ts)
     max_error_index = np.argmax(absolute_error.T[0])
     print(max_error_index)
     print(err)
@@ -81,6 +81,13 @@ def plot_results(file_path):
     plt.ylabel('Prediction')
     plt.legend(['Target', 'Prediction'])
     plt.savefig(dir+'/target_vs_prediction.png')
+    plt.clf()
+
+    plt.scatter(target_ts[start_index:end_index], pred_ts[start_index:end_index])
+    plt.xlabel('Target')
+    plt.ylabel('Prediction')
+    plt.legend(['Target', 'Prediction'])
+    plt.savefig(dir+'/target_vs_prediction_ts_ms.png')
     plt.clf()
 
 
