@@ -31,4 +31,4 @@ print("Generating validation data")
 getDatasetFromDistA(sample_set[:, 0:int(T * 0.01)], data_folder="training_data/validation/", ti=1, tf=0.1,r=10,deltaT=0.01,norm=False)
 
 print("Generating validation data (time series)")
-getDatasetFromDistA(sample_set[:, 0:int(T * 0.01)], data_folder="training_data/validation_ts/", ti=0, tf=1,r=10,deltaT=0.01,norm=False)
+getDatasetFromDistA(sample_set[:, 0:int(T * 0.01)], data_folder="training_data/validation_ts/", ti=0, tf=50,r=10,deltaT=0.01,norm=False)

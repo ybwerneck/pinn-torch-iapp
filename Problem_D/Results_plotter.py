@@ -42,7 +42,7 @@ def plot_results(file_path):
     with h5py.File(file_path + "/val_err.h5", 'r') as hf:
         err = hf['error_stats'][:]
 
-    window_size = 20
+    window_size = 2000
     absolute_error = np.abs(target - pred)
     max_error_index = np.argmax(absolute_error.T[0])
     print(max_error_index)

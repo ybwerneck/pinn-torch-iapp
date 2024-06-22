@@ -2,5 +2,5 @@ Total GPUs available: 1
 Process 0 is using GPU 0 
 GPU 0: NVIDIA GeForce RTX 4070
  RANK0, runnin simu 0 params:
- {'model_params': {'hidden_layers': ((<class 'torch.nn.modules.activation.SiLU'>, 16), (<class 'torch.nn.modules.activation.SiLU'>, 16))}} 
+ {'model_params': {'hidden_layers': ((<class 'torch.nn.modules.activation.SiLU'>, 32), (<class 'torch.nn.modules.activation.SiLU'>, 32))}} 
  in dir batch_results/simulation0

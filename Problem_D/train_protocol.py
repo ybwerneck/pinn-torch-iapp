@@ -62,7 +62,7 @@ def train(model_params,outputfolder,gpuid):
         trainer.add_validator(Validator(data_inv,data_ouv,"val",device,dump_f=1 ,dump_func=gen_recursive_validator(time_series_data,10)))
 
 
-        trainer.train(100000)
+        trainer.train(1000000)
 
 
 

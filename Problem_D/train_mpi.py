@@ -25,7 +25,7 @@ except:
     clear_folder(dir)
         
 # Define the list
-hl = [(nn.SiLU, 16)]
+hl = [(nn.SiLU, 32)]
 
 # Define the input array with sizes
 sizes = [2]
